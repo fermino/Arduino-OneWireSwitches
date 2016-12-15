@@ -5,11 +5,11 @@
 
 	// Calculate lower and higher ranges based on resistor tolerances
 
-	#define OWS_LOWER_R1	R1 * (1.0f - OWS_RESISTOR_TOLERANCE)
-	#define OWS_LOWER_R2	R2 * (1.0f - OWS_RESISTOR_TOLERANCE)
+	#define OWS_LOWEST_R1	R1 * (1.0f - OWS_RESISTOR_TOLERANCE)
+	#define OWS_LOWEST_R2	R2 * (1.0f - OWS_RESISTOR_TOLERANCE)
 
-	#define OWS_HIGHER_R1	R1 * (1.0f + OWS_RESISTOR_TOLERANCE)
-	#define OWS_HIGHER_R2	R2 * (1.0f + OWS_RESISTOR_TOLERANCE)
+	#define OWS_HIGHEST_R1	R1 * (1.0f + OWS_RESISTOR_TOLERANCE)
+	#define OWS_HIGHEST_R2	R2 * (1.0f + OWS_RESISTOR_TOLERANCE)
 
 	bool OneWireSwitches::readKey(uint8_t Key)
 	{
@@ -20,7 +20,7 @@
 			uint16_t Reading = analogRead(InputPin);
 			// If the reading is between the lower expected reading and the higher one
 
-			if(Reading >= (1023 * OWS_LOWER_R2 / (OWS_HIGHER_R1 + OWS_LOWER_R2)) && Reading <= (1023 * OWS_HIGHER_R2 / (OWS_LOWER_R1 + OWS_HIGHER_R2)))
+			if(Reading >= (1023 * OWS_LOWEST_R2 / (OWS_HIGHEST_R1 + OWS_LOWEST_R2)) && Reading <= (1023 * OWS_HIGHEST_R2 / (OWS_LOWEST_R1 + OWS_HIGHEST_R2)))
 				return true;
 		}
 
