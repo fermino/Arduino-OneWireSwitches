@@ -5,6 +5,8 @@
 
 	// Calculate lower and higher ranges based on resistor tolerances
 
+	#define R1 R1Array[Key]
+
 	#define OWS_LOWEST_R1	R1 * (1.0f - OWS_RESISTOR_TOLERANCE)
 	#define OWS_LOWEST_R2	R2 * (1.0f - OWS_RESISTOR_TOLERANCE)
 
@@ -15,8 +17,6 @@
 	{
 		if(Key < KeyAmount)
 		{
-			uint32_t R1 = R1Array[Key];
-
 			uint16_t Reading = analogRead(InputPin);
 			// If the reading is between the lower expected reading and the higher one
 
@@ -26,3 +26,5 @@
 
 		return false;
 	}
+	// Add copyright and license info. 
+	// Add examples and keywords.txt
