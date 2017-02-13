@@ -5,12 +5,12 @@
 
 	// Calculate lower and higher ranges based on resistor tolerances
 
-	#define R1 R1Array[Key]
+	#define OWS_R1 R1Array[Key]
 
-	#define OWS_LOWEST_R1	R1 * (1.0f - OWS_RESISTOR_TOLERANCE)
+	#define OWS_LOWEST_R1	OWS_R1 * (1.0f - OWS_RESISTOR_TOLERANCE)
 	#define OWS_LOWEST_R2	R2 * (1.0f - OWS_RESISTOR_TOLERANCE)
 
-	#define OWS_HIGHEST_R1	R1 * (1.0f + OWS_RESISTOR_TOLERANCE)
+	#define OWS_HIGHEST_R1	OWS_R1 * (1.0f + OWS_RESISTOR_TOLERANCE)
 	#define OWS_HIGHEST_R2	R2 * (1.0f + OWS_RESISTOR_TOLERANCE)
 
 	bool OneWireSwitches::readKey(uint8_t Key)
