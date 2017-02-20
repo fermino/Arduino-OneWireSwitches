@@ -46,7 +46,7 @@
 
 			bool readKey(uint8_t Key);
 
-			//uint16_t readPulse(uint8_t Key, uint16_t Timeout /* = 0*/);
+			uint16_t readKeyPulse(uint8_t Key, uint16_t Timeout /* = 0*/);
 	};
 
 	template <uint8_t KEY_ARRAY_SIZE>
@@ -73,5 +73,19 @@
 		}
 
 		return false;
+	}
+
+	template <uint8_t KEY_ARRAY_SIZE>
+	uint16_t OneWireSwitches<KEY_ARRAY_SIZE>::readKeyPulse(uint8_t KeyIndex, uint16_t Timeout = 0)
+	{
+		uint16_t Time = 0;
+
+		while(this->readKey(KeyIndex) && (Timeout == 0 || Time < Timeout))
+		{
+			Time++;
+			delay(1);
+		}
+
+		return Time;
 	}
 #endif
