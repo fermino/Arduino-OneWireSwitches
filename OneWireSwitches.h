@@ -27,7 +27,9 @@
 		private:
 			uint8_t InputPin;
 
+			uint8_t KeyArraySize = KEY_ARRAY_SIZE;
 			uint16_t ExpectedValues[KEY_ARRAY_SIZE];
+
 			uint8_t ReadTolerance;
 
 			/*#ifdef OWS_ENABLE_CALLBACKS
@@ -55,14 +57,14 @@
 		this->InputPin = InputPin;
 		this->ReadTolerance = ReadTolerance * 2;
 
-		for(uint8_t i = (sizeof(ExpectedValues) / sizeof(*ExpectedValues)) - 1; i >= 0; i--)
+		for(uint8_t i = 0; i < KeyArraySize; i++)
 			ExpectedValues[i] = round(R2 / (R2 + R1[i]) * 1023) - ReadTolerance;
 	}
 
 	template <uint8_t KEY_ARRAY_SIZE>
 	bool OneWireSwitches<KEY_ARRAY_SIZE>::readKey(uint8_t KeyIndex)
 	{
-		if(KeyIndex < (sizeof(ExpectedValues) / sizeof(*ExpectedValues)))
+		if(KeyIndex < KeyArraySize)
 		{
 			uint16_t Reading = analogRead(InputPin);
 
