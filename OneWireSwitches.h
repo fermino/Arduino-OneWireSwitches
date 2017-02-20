@@ -58,7 +58,7 @@
 		this->ReadTolerance = ReadTolerance * 2;
 
 		for(uint8_t i = 0; i < KeyArraySize; i++)
-			ExpectedValues[i] = round(R2 / (R2 + R1[i]) * 1023) - ReadTolerance;
+			ExpectedValues[i] = round(((float) R2 / (float) (R2 + R1[i])) * 1023) - ReadTolerance;
 	}
 
 	template <uint8_t KEY_ARRAY_SIZE>
@@ -82,7 +82,7 @@
 	{
 		uint16_t Time = 0;
 
-		while(this->readKey(KeyIndex) && (Timeout == 0 || Time < Timeout))
+		while(readKey(KeyIndex) && (Timeout == 0 || Time < Timeout))
 		{
 			Time++;
 			delay(1);
