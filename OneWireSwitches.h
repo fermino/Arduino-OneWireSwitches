@@ -9,7 +9,7 @@
 
 	//#define OWS_ENABLE_CALLBACKS
 
-	#ifdef OWS_ENABLE_CALLBACKS
+	/*#ifdef OWS_ENABLE_CALLBACKS
 		typedef void (*ows_callback)();
 
 		struct OWSCallback
@@ -19,40 +19,59 @@
 			uint16_t MaxPulseLength;
 			ows_callback Callback;
 		};
-	#endif
+	#endif*/
 
+	template <uint8_t KEY_ARRAY_SIZE>
 	class OneWireSwitches
 	{
 		private:
 			uint8_t InputPin;
 
-			uint8_t KeyAmount;
+			uint16_t ExpectedValues[KEY_ARRAY_SIZE];
+			uint8_t ReadTolerance;
 
-			uint32_t* R1Array;
-			uint32_t R2; // Resistor tied to ground
-
-			// Resistor's % tolerance multiplied by 10
-			// Then, a 5% tolerance will be 50, and a 1% tolerance will be 10. 
-			uint8_t Tolerance;
-
-			#ifdef OWS_ENABLE_CALLBACKS
+			/*#ifdef OWS_ENABLE_CALLBACKS
 				uint8_t CallbackAmount;
 
 				OWSCallback* Callbacks;
-			#endif 
+			#endif*/
 		public:
-			OneWireSwitches(uint8_t InputPin, uint8_t KeyAmount, uint32_t* R1Array, uint32_t R2, uint8_t Tolerance = 50)
-			: InputPin(InputPin), KeyAmount(KeyAmount), R1Array(R1Array), R2(R2), Tolerance(Tolerance)
-			{}
+			OneWireSwitches(uint8_t InputPin, uint32_t* R1, uint32_t R2, uint8_t ReadTolerance = 25);
 
-			#ifdef OWS_ENABLE_CALLBACKS
+			/*#ifdef OWS_ENABLE_CALLBACKS
 				void setCallbacks(uint8_t Amount, OWSCallback* Cs);
 
 				void readAll();
-			#endif
+			#endif*/
 
 			bool readKey(uint8_t Key);
 
-			uint16_t readPulse(uint8_t Key, uint16_t Timeout /* = 0*/);
+			//uint16_t readPulse(uint8_t Key, uint16_t Timeout /* = 0*/);
 	};
+
+	template <uint8_t KEY_ARRAY_SIZE>
+	OneWireSwitches<KEY_ARRAY_SIZE>::OneWireSwitches(uint8_t InputPin, uint32_t* R1, uint32_t R2, uint8_t ReadTolerance = 25)
+	{
+		this->InputPin = InputPin;
+		this->ReadTolerance = ReadTolerance * 2;
+
+		for(uint8_t i = (sizeof(ExpectedValues) / sizeof(*ExpectedValues)) - 1; i >= 0; i--)
+			ExpectedValues[i] = round(R2 / (R2 + R1[i]) * 1023) - ReadTolerance;
+	}
+
+	template <uint8_t KEY_ARRAY_SIZE>
+	bool OneWireSwitches<KEY_ARRAY_SIZE>::readKey(uint8_t KeyIndex)
+	{
+		if(KeyIndex < (sizeof(ExpectedValues) / sizeof(*ExpectedValues)))
+		{
+			uint16_t Reading = analogRead(InputPin);
+
+			if(Reading < ExpectedValues[KeyIndex] || Reading > (ExpectedValues[KeyIndex] + ReadTolerance))
+				return false;
+
+			return true;
+		}
+
+		return false;
+	}
 #endif
