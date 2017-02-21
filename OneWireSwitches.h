@@ -38,7 +38,7 @@
 				OWSCallback* Callbacks;
 			#endif*/
 		public:
-			OneWireSwitches(uint8_t InputPin, uint32_t* R1, uint32_t R2, uint8_t ReadTolerance = 25);
+			OneWireSwitches(uint8_t InputPin, uint32_t* R1, uint32_t R2, uint8_t ReadTolerance/* = 25*/);
 
 			/*#ifdef OWS_ENABLE_CALLBACKS
 				void setCallbacks(uint8_t Amount, OWSCallback* Cs);
